@@ -1,38 +1,39 @@
-@extends('root-view::admin-lte.main')
+@extends(config('menu-builder.template.master_page'))
 
 @php
-    $edit = !empty($locDivision->id);
+    $edit = !empty($menu->id);
 @endphp
 
-@section('content')
+@section(config('menu-builder.template.content_placeholder', 'content'))
     <div class="card card-outline">
         <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">{{!$edit ? 'Add Division': 'Update Division'}}</h3>
-            <a href="{{route('admin.loc-divisions.index')}}" class="btn btn-sm btn-outline-primary">
+            <h3 class="card-title">{{!$edit ? 'Add Menu': 'Update Menu'}}</h3>
+            <a href="{{route('menu-builder.menus.index')}}" class="btn btn-sm btn-outline-secondary">
                 <i class="fas fa-backward"></i> Back to list
             </a>
         </div>
         <div class="card-body">
             <form class="row edit-add-form" method="post"
-                  action="{{$edit ? route('admin.loc-divisions.update', $locDivision->id) : route('admin.loc-divisions.store')}}">
+                  action="{{$edit ? route('menu-builder.menus.update', $menu->id) : route('menu-builder.menus.store')}}">
                 @csrf
                 @if($edit)
                     @method('put')
                 @endif
-                <div class="col-sm-6 col-md-4">
-                    <x-input.text name="title" id="title" label="Title"
-                                  defaultValue="{{$edit ? $locDivision->title : ''}}"></x-input.text>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="name">
+                            {{ __('Name') }}
+                        </label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="name"
+                            name="name"
+                            value="{{$edit ? $menu->name : ''}}"
+                            placeholder="{{ __('Name') }}"
+                        >
+                    </div>
                 </div>
-
-                <div class="col-sm-6 col-md-4">
-                    <x-input.text name="title_en" label="Title (En)"
-                                  defaultValue="{{$edit ? $locDivision->title_en : ''}}"></x-input.text>
-                </div>
-                <div class="col-sm-6 col-md-4">
-                    <x-input.text name="bbs_code" label="BBS Code"
-                                  defaultValue="{{$edit ? $locDivision->bbs_code : ''}}"></x-input.text>
-                </div>
-
                 <div class="col-sm-12 text-right">
                     <button type="submit" class="btn btn-success">{{$edit ? 'Update' : 'Create'}}</button>
                 </div>
@@ -44,21 +45,20 @@
     </div>
 @endsection
 
-@push('js')
-    <x-generic-validation-error-toastr/>
+@push(config('menu-builder.template.js_placeholder', 'js'))
+    <script>
+        @if (!empty($errors) && $errors->any())
+        @foreach ($errors->all() as $error)
+        toastr.error("{{ $error }}");
+        @endforeach
+        @endif
+    </script>
     <script>
         const editAddForm = $('.edit-add-form');
         editAddForm.validate({
             rules: {
-                title: {
+                name: {
                     required: true
-                },
-                title_en: {
-                    required: true
-                },
-                bbs_code: {
-                    required: true,
-                    maxlength: 2
                 }
             },
             submitHandler: function (htmlForm) {

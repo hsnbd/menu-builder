@@ -33,14 +33,16 @@ class MenuBuilderServiceProvider extends ServiceProvider
             ], 'config');
         }
 
-        $this->loadViewsFrom(config('menu-builder.view_path'), 'menu-builder');
-
+        $this->loadViews();
         $this->loadRoute();
+        $this->loadMigrations();
     }
 
-    /**
-     * Load helpers.
-     */
+    protected function loadViews()
+    {
+        $this->loadViewsFrom(config('menu-builder.view_path'), 'menu-builder');
+    }
+
     protected function loadHelpers()
     {
         require_once __DIR__ . '/helpers/helper.php';
@@ -49,5 +51,10 @@ class MenuBuilderServiceProvider extends ServiceProvider
     protected function loadRoute()
     {
         $this->loadRoutesFrom(__DIR__ . '/routes.php');
+    }
+
+    protected function loadMigrations()
+    {
+        $this->loadMigrationsFrom(__DIR__ . DIRECTORY_SEPARATOR . 'migrations');
     }
 }
