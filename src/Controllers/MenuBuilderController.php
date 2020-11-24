@@ -7,19 +7,31 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
+use Softbd\MenuBuilder\Facades\MenuBuilder;
 use Softbd\MenuBuilder\Models\Menu;
 use Softbd\MenuBuilder\Models\MenuItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Softbd\MenuBuilder\Repositories\MenuBuilderRepository;
 
 class MenuBuilderController
 {
     private const VIEW_PATH = 'menu-builder::';
+    private $menuBuilderRepo;
+
+    public function __construct()
+    {
+        $this->menuBuilderRepo = new MenuBuilderRepository();
+    }
 
     public function index(): View
     {
-        $menus = Menu::all();
+        if (config('menu-builder.db-file')) {
+            $menus = $this->menuBuilderRepo->getAllMenuAsModelObject();
+        } else {
+            $menus = Menu::all();
+        }
 
         return view(self::VIEW_PATH . 'browse', compact('menus'));
     }
@@ -38,7 +50,11 @@ class MenuBuilderController
         $data = $request->all();
 
         try {
-            Menu::create($data);
+            if (config('menu-builder.db-file')) {
+                $this->menuBuilderRepo->createMenuFile($data['name']);
+            } else {
+                Menu::create($data);
+            }
         } catch (\Throwable $exception) {
             Log::debug($exception->getMessage());
             return back()->with([
@@ -53,30 +69,35 @@ class MenuBuilderController
         ]);
     }
 
-    public function show(int $id): View
+    public function edit($id): View
     {
-        $menu = Menu::findOrFail($id);
-
-        return view(self::VIEW_PATH . 'read', compact('menu'));
-    }
-
-    public function edit(int $id): View
-    {
-        $menu = Menu::findOrFail($id);
+        if (config('menu-builder.db-file')) {
+            $menu = $this->menuBuilderRepo->getMenuInstance($id);
+        } else {
+            $menu = Menu::findOrFail($id);
+        }
 
         return view(self::VIEW_PATH . 'edit-add', compact('menu'));
     }
 
     public function update(Request $request, int $id): RedirectResponse
     {
-        $menu = Menu::findOrFail($id);
+        if (config('menu-builder.db-file')) {
+            $menu = $this->menuBuilderRepo->getMenuInstance($id);
+        } else {
+            $menu = Menu::findOrFail($id);
+        }
 
         $this->validator($request)->validate();
 
         $data = $request->all();
 
         try {
-            $menu->update($data);
+            if (config('menu-builder.db-file')) {
+                $this->menuBuilderRepo->updateMenuFile($menu->name, $data['name']);
+            } else {
+                $menu->update($data);
+            }
         } catch (\Throwable $exception) {
             Log::debug($exception->getMessage());
             return back()->with([
@@ -93,9 +114,18 @@ class MenuBuilderController
 
     public function destroy(int $id): RedirectResponse
     {
-        $menu = Menu::findOrFail($id);
+        if (config('menu-builder.db-file')) {
+            $menu = $this->menuBuilderRepo->getMenuInstance($id);
+        } else {
+            $menu = Menu::findOrFail($id);
+        }
+
         try {
-            $menu->delete();
+            if (config('menu-builder.db-file')) {
+                $menu = $this->menuBuilderRepo->getMenuInstance($id);
+            } else {
+                $menu = Menu::findOrFail($id);
+            }
         } catch (\Throwable $exception) {
             Log::debug($exception->getMessage());
             return back()->with([

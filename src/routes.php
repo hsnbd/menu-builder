@@ -15,5 +15,5 @@ Route::group([
     Route::post('/menus/{menu}/item', [Softbd\MenuBuilder\Controllers\MenuBuilderController::class, 'add_item'])->name('menus.item.add');
     Route::put('/menus/{menu}/item', [Softbd\MenuBuilder\Controllers\MenuBuilderController::class, 'update_item'])->name('menus.item.update');
 
-    Route::resource('/menus', Softbd\MenuBuilder\Controllers\MenuBuilderController::class);
+    Route::resource('/menus', Softbd\MenuBuilder\Controllers\MenuBuilderController::class)->except(['show']);
 });
