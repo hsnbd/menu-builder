@@ -45,18 +45,24 @@ class MenuItemController
 
     public function update(Request $request): RedirectResponse
     {
-        $id = $request->input('id');
-        $data = $this->menuItemRepo->prepareParameters(
-            $request->except(['id'])
-        );
+        $data = $request->except('id');
 
-        /** @var MenuItem $menuItem */
-        $menuItem = MenuItem::findOrFail($id);
+        $this->menuItemRepo->menuItemValidator($data)->validate();
 
-        $menuItem->update($data);
+        $menuItem = MenuItem::findOrFail($request->input('id', -1));
+
+        try {
+            $this->menuItemRepo->updateMenuItem($menuItem, $data);
+        } catch (\Throwable $exception) {
+            Log::debug($exception->getMessage());
+            return back()->with([
+                'message' => __('Something went wrong. Please try again.'),
+                'alert-type' => 'error'
+            ]);
+        }
 
         return redirect()
-            ->route('menu-builder.menus.builder', $menuItem->menu_id)
+            ->route('menu-builder.menus.builder', $data['menu_id'])
             ->with([
                 'message' => __('Menu item updated successfully.'),
                 'alert-type' => 'success',

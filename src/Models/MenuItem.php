@@ -131,11 +131,11 @@ class MenuItem extends Model
     /**
      * Return the Highest Order Menu Item.
      *
-     * @param number $parent (Optional) Parent id. Default null
+     * @param null $parent (Optional) Parent id. Default null
      *
-     * @return number Order number
+     * @return int Order number
      */
-    public function highestOrderMenuItem($parent = null)
+    public function highestOrderMenuItem($parent = null): int
     {
         $order = 1;
 
@@ -144,9 +144,28 @@ class MenuItem extends Model
             ->first();
 
         if (!is_null($item)) {
-            $order = ((int) ($item->order)) + 1;
+            $order = ((int)($item->order)) + 1;
         }
 
         return $order;
+    }
+
+    /**
+     * @param string $currentUrl
+     * @return bool
+     */
+    public function anyChildrenBrowseCurrentUrl(string $currentUrl): bool
+    {
+        /** @var self $children */
+        $children = $this->children()->first();
+
+        while ($children) {
+            if (url($children->link()) == $currentUrl) {
+                return true;
+            }
+            $children = $children->children()->first();
+        }
+
+        return false;
     }
 }

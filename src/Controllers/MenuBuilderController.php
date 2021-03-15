@@ -20,7 +20,7 @@ class MenuBuilderController
     public function builder($id)
     {
         $menu = (new MenuRepository())->getMenuInstance($id);
-        return view('menu-builder::menu-builder', compact('menu'));
+        return view(self::VIEW_PATH.'menu-builder', compact('menu'));
     }
 
     public function orderItem(Request $request)

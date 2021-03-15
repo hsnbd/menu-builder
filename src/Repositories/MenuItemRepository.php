@@ -6,6 +6,7 @@ namespace Softbd\MenuBuilder\Repositories;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Arr;
+use Softbd\MenuBuilder\Models\Menu;
 use Softbd\MenuBuilder\Models\MenuItem;
 
 class MenuItemRepository
@@ -28,11 +29,12 @@ class MenuItemRepository
             'title_bn' => 'required_without:title',
             'menu_id' => 'required',
             'type' => 'required',
-            'url' => 'required',
-            'icon_class' => 'string',
-            'permission_key' => 'string',
-            'color' => 'string',
-            'target' => 'string',
+            'url' => 'required_without:route',
+            'route' => 'required_without:url',
+            'icon_class' => 'nullable|string',
+            'permission_key' => 'nullable|string',
+            'color' => 'nullable|string',
+            'target' => 'nullable|string',
         ];
 
         return \Illuminate\Support\Facades\Validator::make($data, $rules);
@@ -55,5 +57,11 @@ class MenuItemRepository
         }
 
         return $parameters;
+    }
+
+    public function updateMenuItem(MenuItem $menuItem, array $data)
+    {
+        $data = $this->prepareParameters($data);
+        $menuItem->update($data);
     }
 }

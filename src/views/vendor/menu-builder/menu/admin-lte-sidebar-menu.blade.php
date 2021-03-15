@@ -22,8 +22,10 @@
 
                         // With Children Attributes
                         if(!$originalItem->children->isEmpty()) {
-                            $listItemClass .=  ' has-treeview';
                             $caret = '<i class="right fas fa-angle-left"></i>';
+                            if($originalItem->anyChildrenBrowseCurrentUrl(url()->current())){
+                                $listItemClass .= ' menu-open';
+                            }
                         }
 
                         if (url($item->link()) == url()->current()) {

@@ -70,11 +70,13 @@ class Menu extends Model
     public static function display($menuName, $type = null, array $options = [])
     {
         /** GET THE MENU - sort collection in blade */
-        $menu = Menu::where('name', '=', $menuName)
-            ->with(['parent_items.children' => static function ($q) {
-                $q->orderBy('order');
-            }])
-            ->first();
+        $menu = Cache::remember('admin_menu_' . $menuName, \Carbon\Carbon::now()->addDays(30), static function () use ($menuName) {
+            return static::where('name', '=', $menuName)
+                ->with(['parent_items.children' => static function ($q) {
+                    $q->orderBy('order');
+                }])
+                ->first();
+        });
 
         /** Check for Menu Existence */
         if (!isset($menu)) {
@@ -116,7 +118,7 @@ class Menu extends Model
 
     public function removeMenuFromCache()
     {
-        Cache::forget('voyager_menu_' . $this->name);
+        Cache::forget('admin_menu_' . $this->name);
     }
 
     private static function processItems($items)
@@ -162,7 +164,7 @@ class Menu extends Model
 
         /** Filter items by permission */
         $items = $items->filter(static function ($item) {
-            return !$item->children->isEmpty() || app('VoyagerAuth')->user()->can('browse', $item);
+            return !$item->children->isEmpty() || auth()->user()->can('browse', $item);
         });
 
         $items = $items->filter(static function ($item) {
