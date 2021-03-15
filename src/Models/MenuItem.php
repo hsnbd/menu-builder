@@ -44,9 +44,9 @@ class MenuItem extends Model
     {
         parent::boot();
 
-        static::created(static function ($model) {
-            $model->menu->removeMenuFromCache();
-        });
+//        static::created(static function ($model) {
+//            $model->menu->removeMenuFromCache();
+//        });
 
         static::saved(static function ($model) {
             $model->menu->removeMenuFromCache();

@@ -2,90 +2,44 @@
 
 namespace Softbd\MenuBuilder\Repositories;
 
-
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Model;
+use Softbd\MenuBuilder\Models\Menu;
+use Softbd\MenuBuilder\Models\MenuItem;
 
 class MenuBuilderRepository
 {
-    private const FILE_CONFIG_ALIAS = 'menu-builder-json-local';
-
-    public function getMenuInstance(string $name)
+    public function orderMenu(array $menuItems, $parentId)
     {
-        $menu = new \stdClass();
-        $menu->id = $name;
-        $menu->name = $name;
-        return $menu;
-    }
+        foreach ($menuItems as $index => $menuItem) {
+            /** @var Model $item */
+            $item = MenuItem::findOrFail($menuItem->id);
+            $item->order = $index + 1;
+            $item->parent_id = $parentId;
+            $item->save();
 
-    /**
-     * @param string $menuName
-     * @return bool
-     */
-    public function createMenuFile(string $menuName): bool
-    {
-        $menu = $this->processJsonFileName($menuName);
-
-        return Storage::disk(self::FILE_CONFIG_ALIAS)->put($menu, '');
-    }
-
-    /**
-     * @param string $oldMenuName
-     * @param string $newMenuName
-     * @return bool
-     * @throws \Throwable
-     */
-    public function updateMenuFile(string $oldMenuName, string $newMenuName): bool
-    {
-        $oldMenuName = $this->addJsonExtension($oldMenuName);
-        $oldMenu = Storage::disk(self::FILE_CONFIG_ALIAS)->get($oldMenuName);
-        Storage::disk(self::FILE_CONFIG_ALIAS)->delete($oldMenuName);
-
-        $menu = $this->processJsonFileName($newMenuName);
-
-        return Storage::disk(self::FILE_CONFIG_ALIAS)->put($menu, $oldMenu);
-    }
-
-    /**
-     * @return array
-     */
-    public function getAllMenuAsModelObject(): array
-    {
-        $files = Storage::disk(self::FILE_CONFIG_ALIAS)->allFiles();
-
-        $fileObjects = [];
-
-        if ($files) {
-            foreach ($files as $file) {
-                $file = str_replace('.json', '', $file);
-                $obj = new \stdClass();
-                $obj->id = $file;
-                $obj->name = $file;
-                $fileObjects[] = $obj;
+            if (isset($menuItem->children)) {
+                $this->orderMenu($menuItem->children, $item->id);
             }
         }
-
-        return $fileObjects;
     }
 
     /**
-     * @param string $filename
-     * @return string
-     * @throws \Throwable
+     * @param string $exportFileType
+     * @return bool
      */
-    public function processJsonFileName(string $filename): string
+    public function exportMenu(string $exportFileType): bool
     {
-        $filename = trim($filename);
+        $menu = Menu::all()->toArray();
 
-        $regex = preg_match("/^[a-zA-Z0-9_\-\s]{1,191}$/i", $filename);
-        throw_if(!$regex, new \Exception('Invalid file name.'));
-
-        $filename = strtolower(str_replace(' ', '_', $filename));
-
-        return $this->addJsonExtension($filename);
+//        Storage::putFileAs();
     }
 
-    private function addJsonExtension(string $filename): string
+    /**
+     * @param string $importFileType
+     * @return string
+     */
+    public function importMenu(string $importFileType): string
     {
-        return (str_replace('.json', '', $filename) . '.json');
+
     }
 }

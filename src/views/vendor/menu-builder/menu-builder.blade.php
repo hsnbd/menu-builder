@@ -166,7 +166,7 @@
                 </div>
 
                 <form action="" id="m_form" method="POST"
-                      data-action-add="{{ route('menu-builder.menus.item.add', ['menu' => $menu->id]) }}"
+                      data-action-add="{{ route('menu-builder.menus.item.store', ['menu' => $menu->id]) }}"
                       data-action-update="{{ route('menu-builder.menus.item.update', ['menu' => $menu->id]) }}">
 
                     <input id="m_form_method" type="hidden" name="_method" value="POST">
@@ -267,6 +267,17 @@
     </script>
 
     <script>
+        @if (!empty($errors) && $errors->any())
+        @foreach ($errors->all() as $error)
+        toastr.error("{{ $error }}");
+        @endforeach
+        @endif
+    </script>
+
+
+
+    <script>
+        //TODO: Add jQuery validation
         $(document).ready(function () {
             $('.dd').nestable({
                 expandBtnHTML: '',

@@ -13,10 +13,9 @@ return [
         'name_prefix' => 'menu-builder.',
         'middleware' => ['web']
     ],
-    'db-file' => true,
-    'menu-builder-json-local' => [
+    'menu-export-location' => [
         'driver' => 'local',
-        'root' => __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'json-db',
+        'root' => __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'menus',
         'permissions' => [
             'file' => [
                 'public' => 0664,
