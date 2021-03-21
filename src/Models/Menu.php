@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
@@ -23,12 +24,15 @@ use Illuminate\Support\Str;
  * @property-read int|null $items_count
  * @property-read Collection|\Softbd\MenuBuilder\Models\MenuItem[] $parent_items
  * @property-read int|null $parent_items_count
+ * @method static Builder|\Softbd\MenuBuilder\Models\Menu selectAllExcept($exceptColumns)
  * @method static Builder|\Softbd\MenuBuilder\Models\Menu newModelQuery()
  * @method static Builder|\Softbd\MenuBuilder\Models\Menu newQuery()
  * @method static Builder|\Softbd\MenuBuilder\Models\Menu query()
  */
 class Menu extends Model
 {
+    const CACHE_KEY_PREFIX = 'admin_menu_';
+
     protected $table = 'menus';
 
     protected $guarded = [];
@@ -44,6 +48,13 @@ class Menu extends Model
         static::deleted(static function (Menu $model) {
             $model->removeMenuFromCache();
         });
+    }
+
+    public function scopeSelectAllExcept(Builder $query, array $exceptColumns = []): Builder
+    {
+        $allColumns = Schema::getColumnListing($this->getTable());
+        $getColumns = array_diff($allColumns, $exceptColumns);
+        return $query->select($getColumns);
     }
 
 
@@ -70,7 +81,7 @@ class Menu extends Model
     public static function display($menuName, $type = null, array $options = [])
     {
         /** GET THE MENU - sort collection in blade */
-        $menu = Cache::remember('admin_menu_' . $menuName, \Carbon\Carbon::now()->addDays(30), static function () use ($menuName) {
+        $menu = Cache::remember(self::CACHE_KEY_PREFIX . $menuName, \Carbon\Carbon::now()->addDays(30), static function () use ($menuName) {
             return static::where('name', '=', $menuName)
                 ->with(['parent_items.children' => static function ($q) {
                     $q->orderBy('order');
@@ -106,7 +117,6 @@ class Menu extends Model
             }
         }
 
-
         if ($type === '_json') {
             return $items;
         }
@@ -118,7 +128,7 @@ class Menu extends Model
 
     public function removeMenuFromCache()
     {
-        Cache::forget('admin_menu_' . $this->name);
+        Cache::forget(self::CACHE_KEY_PREFIX . $this->name);
     }
 
     private static function processItems($items)

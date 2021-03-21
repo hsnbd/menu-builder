@@ -12,19 +12,5 @@ return [
         'prefix' => 'menu-builder',
         'name_prefix' => 'menu-builder.',
         'middleware' => ['web']
-    ],
-    'menu-export-location' => [
-        'driver' => 'local',
-        'root' => __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'menus',
-        'permissions' => [
-            'file' => [
-                'public' => 0664,
-                'private' => 0600,
-            ],
-            'dir' => [
-                'public' => 0775,
-                'private' => 0700,
-            ],
-        ],
-    ],
+    ]
 ];

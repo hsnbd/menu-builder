@@ -8,9 +8,19 @@
                 <div class="card-header d-flex justify-content-between">
                     <h3 class="card-title font-weight-bold">Menu List</h3>
 
-                    <a href="{{route('menu-builder.menus.create')}}" class="btn btn-sm btn-primary">
-                        <i class="fas fa-plus-circle"></i> Add new
-                    </a>
+                    <div class="btn-group">
+                        <a href="{{route('menu-builder.menus.create')}}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus-circle"></i> Add new
+                        </a>
+
+                        <a href="#" class="btn btn-sm btn-outline-success export">
+                            <i class="fas fa-file-export"></i> Export Menu
+                        </a>
+
+                        <a href="#" class="btn btn-sm btn-outline-danger import">
+                            <i class="fas fa-file-import"></i> Import Menu
+                        </a>
+                    </div>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
@@ -65,7 +75,7 @@
             <div class="modal-header">
                 <h4 class="modal-title"><i class="voyager-trash"></i> {{ __('Are you sure?') }}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label=""><span
-                        aria-hidden="true">&times;</span></button>
+                            aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
                 <p>This action is permanent.</p>
@@ -85,6 +95,58 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<div class="modal modal-danger fade" tabindex="-1" id="export_modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="voyager-trash"></i> {{ __('Are you sure?') }}</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label=""><span
+                            aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <p>This action will export all menu to json file.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-right"
+                        data-dismiss="modal">{{ __('Cancel') }}</button>
+                <form action=""
+                      id="export_form"
+                      method="POST">
+                    {{ csrf_field() }}
+                    <input type="submit" class="btn btn-danger pull-right export-confirm"
+                           value="{{ __('Export') }}">
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal modal-danger fade" tabindex="-1" id="import_modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="voyager-trash"></i> {{ __('Are you sure?') }}</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label=""><span
+                            aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <p>This action will import all menu from json file and replace current menu.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-right"
+                        data-dismiss="modal">{{ __('Cancel') }}</button>
+                <form action=""
+                      id="import_form"
+                      method="POST">
+                    {{ csrf_field() }}
+                    <input type="submit" class="btn btn-danger pull-right import-confirm"
+                           value="{{ __('Export') }}">
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 @endsection
 
 @push(config('menu-builder.template.js_placeholder', 'js'))
@@ -93,6 +155,14 @@
         $(document, 'td').on('click', '.delete', function (e) {
             $('#delete_form')[0].action = $(this).data('action');
             $('#delete_modal').modal('show');
+        });
+        $(document, 'td').on('click', '.export', function (e) {
+            $('#export_form')[0].action = '{{route('menu-builder.menus.export')}}';
+            $('#export_modal').modal('show');
+        });
+        $(document, 'td').on('click', '.import', function (e) {
+            $('#import_form')[0].action = '{{route('menu-builder.menus.import')}}';
+            $('#import_modal').modal('show');
         });
     });
 </script>

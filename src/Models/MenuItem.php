@@ -5,8 +5,10 @@ namespace Softbd\MenuBuilder\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 
 
 /**
@@ -33,6 +35,7 @@ use Illuminate\Support\Facades\Route;
  * @method static Builder|\Softbd\MenuBuilder\Models\MenuItem newModelQuery()
  * @method static Builder|\Softbd\MenuBuilder\Models\MenuItem newQuery()
  * @method static Builder|\Softbd\MenuBuilder\Models\MenuItem query()
+ * @method static Builder|\Softbd\MenuBuilder\Models\MenuItem selectAllExcept($exceptColumns)
  */
 class MenuItem extends Model
 {
@@ -44,17 +47,24 @@ class MenuItem extends Model
     {
         parent::boot();
 
-//        static::created(static function ($model) {
-//            $model->menu->removeMenuFromCache();
-//        });
-
-        static::saved(static function ($model) {
+        static::created(static function (self $model) {
             $model->menu->removeMenuFromCache();
         });
 
-        static::deleted(static function ($model) {
+        static::saved(static function (self $model) {
             $model->menu->removeMenuFromCache();
         });
+
+        static::deleted(static function (self $model) {
+            $model->menu->removeMenuFromCache();
+        });
+    }
+
+    public function scopeSelectAllExcept(Builder $query, array $exceptColumns = []): Builder
+    {
+        $allColumns = Schema::getColumnListing($this->getTable());
+        $getColumns = array_diff($allColumns, $exceptColumns);
+        return $query->select($getColumns);
     }
 
     public function children()
@@ -63,7 +73,7 @@ class MenuItem extends Model
             ->with('children');
     }
 
-    public function menu()
+    public function menu(): BelongsTo
     {
         return $this->belongsTo(Menu::class);
     }

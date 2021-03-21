@@ -3,11 +3,17 @@
 namespace Softbd\MenuBuilder\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Softbd\MenuBuilder\Models\Menu;
 use Softbd\MenuBuilder\Models\MenuItem;
 
 class MenuBuilderRepository
 {
+    const EXPORT_IMPORT_MENUS_DISK = 'menu-builder-json-local';
+
+    const EXPORT_IMPORT_MENUS_NAME = 'menus.json';
+    const EXPORT_IMPORT_MENU_ITEMS_NAME = 'menu-items.json';
+
     public function orderMenu(array $menuItems, $parentId)
     {
         foreach ($menuItems as $index => $menuItem) {
@@ -24,22 +30,56 @@ class MenuBuilderRepository
     }
 
     /**
-     * @param string $exportFileType
      * @return bool
+     * @throws \Exception
      */
-    public function exportMenu(string $exportFileType): bool
+    public function exportMenuToLocalJson(): bool
     {
-        $menu = Menu::all()->toArray();
+        $menus = Menu::selectAllExcept(['created_at', 'updated_at'])->get()->toJson();
+        $menuItems = MenuItem::selectAllExcept(['created_at', 'updated_at'])->get()->toJson();
 
-//        Storage::putFileAs();
+        $response = Storage::disk(self::EXPORT_IMPORT_MENUS_DISK)->put(self::EXPORT_IMPORT_MENUS_NAME, $menus);
+        $response1 = Storage::disk(self::EXPORT_IMPORT_MENUS_DISK)->put(self::EXPORT_IMPORT_MENU_ITEMS_NAME, $menuItems);
+
+        if (!$response || !$response1) {
+            throw new \Exception('Unable to export');
+        }
+
+        return true;
     }
 
     /**
-     * @param string $importFileType
-     * @return string
+     * @return array
+     * @throws \Exception
      */
-    public function importMenu(string $importFileType): string
+    public function getLocalJsonMenus(): array
     {
+        try {
+            $response = Storage::disk(self::EXPORT_IMPORT_MENUS_DISK)->get(self::EXPORT_IMPORT_MENUS_NAME);
+            $menus = json_decode($response, true);
 
+            $response2 = Storage::disk(self::EXPORT_IMPORT_MENUS_DISK)->get(self::EXPORT_IMPORT_MENU_ITEMS_NAME);
+            $menuItems = json_decode($response2, true);
+        } catch (\Throwable $throwable) {
+            throw new \Exception('Unable to import');
+        }
+
+        return compact('menus', 'menuItems');
+    }
+
+    public function clearAllMenuCache()
+    {
+        $menus = Menu::all();
+
+        foreach ($menus as $menu) {
+            /** @var Menu $menu */
+            $menu->removeMenuFromCache();
+        }
+    }
+
+    public function deleteAllMenu(): bool
+    {
+        return Menu::where('id', '!=', null)->delete() &&
+        MenuItem::where('id', '!=', null)->delete();
     }
 }
