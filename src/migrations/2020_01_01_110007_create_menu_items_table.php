@@ -15,6 +15,9 @@ class CreateMenuItemsTable extends Migration {
 	{
 		Schema::create('menu_items', function(Blueprint $table)
 		{
+            /** Please select engine that support transaction */
+            $table->engine = 'InnoDB';
+
             $table->mediumIncrements('id');
             $table->unsignedSmallInteger('menu_id')->nullable();
             $table->string('title', 191);

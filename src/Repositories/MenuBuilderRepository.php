@@ -3,6 +3,7 @@
 namespace Softbd\MenuBuilder\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Softbd\MenuBuilder\Models\Menu;
 use Softbd\MenuBuilder\Models\MenuItem;
@@ -54,15 +55,11 @@ class MenuBuilderRepository
      */
     public function getLocalJsonMenus(): array
     {
-        try {
-            $response = Storage::disk(self::EXPORT_IMPORT_MENUS_DISK)->get(self::EXPORT_IMPORT_MENUS_NAME);
-            $menus = json_decode($response, true);
+        $response = Storage::disk(self::EXPORT_IMPORT_MENUS_DISK)->get(self::EXPORT_IMPORT_MENUS_NAME);
+        $menus = json_decode($response, true);
 
-            $response2 = Storage::disk(self::EXPORT_IMPORT_MENUS_DISK)->get(self::EXPORT_IMPORT_MENU_ITEMS_NAME);
-            $menuItems = json_decode($response2, true);
-        } catch (\Throwable $throwable) {
-            throw new \Exception('Unable to import');
-        }
+        $response2 = Storage::disk(self::EXPORT_IMPORT_MENUS_DISK)->get(self::EXPORT_IMPORT_MENU_ITEMS_NAME);
+        $menuItems = json_decode($response2, true);
 
         return compact('menus', 'menuItems');
     }

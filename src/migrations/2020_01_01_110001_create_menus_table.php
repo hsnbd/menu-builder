@@ -15,6 +15,9 @@ class CreateMenusTable extends Migration {
 	{
 		Schema::create('menus', function(Blueprint $table)
 		{
+		    /** Please select engine that support transaction */
+            $table->engine = 'InnoDB';
+
 			$table->smallIncrements('id');
 			$table->string('name', 191)->unique();
 			$table->timestamps();

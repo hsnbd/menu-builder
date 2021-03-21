@@ -114,7 +114,7 @@
                       id="export_form"
                       method="POST">
                     {{ csrf_field() }}
-                    <input type="submit" class="btn btn-danger pull-right export-confirm"
+                    <input type="submit" class="btn btn-success pull-right export-confirm"
                            value="{{ __('Export') }}">
                 </form>
             </div>
@@ -141,7 +141,7 @@
                       method="POST">
                     {{ csrf_field() }}
                     <input type="submit" class="btn btn-danger pull-right import-confirm"
-                           value="{{ __('Export') }}">
+                           value="{{ __('Import') }}">
                 </form>
             </div>
         </div><!-- /.modal-content -->

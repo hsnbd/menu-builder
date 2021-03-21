@@ -63,9 +63,9 @@ class MenuBuilderServiceProvider extends ServiceProvider
     protected function loadDiskFileConfig(): void
     {
         if (!config('filesystems.disks.menu-builder-json-local')) {
-            $this->app['config']["filesystems.disks.menu-builder-json-local"] = [
+            $this->app['config']["filesystems.disks.menu-builder-json-local"] = config('menu-builder.menu-disk', [
                 'driver' => 'local',
-                'root' => __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'json-db',
+                'root' => base_path('menu-backup'),
                 'permissions' => [
                     'file' => [
                         'public' => 0664,
@@ -76,7 +76,7 @@ class MenuBuilderServiceProvider extends ServiceProvider
                         'private' => 0700,
                     ],
                 ],
-            ];
+            ]);
         }
     }
 }
