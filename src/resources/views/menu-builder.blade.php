@@ -1,4 +1,4 @@
-@extends(config('menu-builder.template.master_page'))
+@extends('menu-builder::core.main')
 
 @push(config('menu-builder.template.css_placeholder', 'css'))
     <style>
@@ -141,7 +141,7 @@
                         </div>
                     </div>
 
-                    <div class="card-body" style="padding:30px;">
+                    <div class="card-body menu-builder-nestable" style="padding:30px;">
                         <div class="dd">
                             {!! menu($menu->name, 'builder') !!}
                         </div>

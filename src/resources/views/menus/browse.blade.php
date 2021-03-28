@@ -1,4 +1,4 @@
-@extends(config('menu-builder.template.master_page'))
+@extends('menu-builder::core.main')
 
 @section(config('menu-builder.template.content_placeholder', 'content'))
 <div class="container-fluid">

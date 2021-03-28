@@ -1,4 +1,4 @@
-@extends(config('menu-builder.template.master_page'))
+@extends('menu-builder::core.main')
 
 @php
     $edit = !empty($menu->id);
