@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Softbd\MenuBuilder\Controllers;
+namespace Hsnbd\MenuBuilder\Controllers;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Softbd\MenuBuilder\Models\Menu;
-use Softbd\MenuBuilder\Repositories\MenuRepository;
+use Hsnbd\MenuBuilder\Models\Menu;
+use Hsnbd\MenuBuilder\Repositories\MenuRepository;
 
 class MenuController
 {

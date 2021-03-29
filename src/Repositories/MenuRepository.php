@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Softbd\MenuBuilder\Repositories;
+namespace Hsnbd\MenuBuilder\Repositories;
 
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Softbd\MenuBuilder\Models\Menu;
+use Hsnbd\MenuBuilder\Models\Menu;
 
 class MenuRepository
 {

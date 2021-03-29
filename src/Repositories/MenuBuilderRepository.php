@@ -1,12 +1,12 @@
 <?php
 
-namespace Softbd\MenuBuilder\Repositories;
+namespace Hsnbd\MenuBuilder\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Softbd\MenuBuilder\Models\Menu;
-use Softbd\MenuBuilder\Models\MenuItem;
+use Hsnbd\MenuBuilder\Models\Menu;
+use Hsnbd\MenuBuilder\Models\MenuItem;
 
 class MenuBuilderRepository
 {

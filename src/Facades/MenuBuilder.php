@@ -1,5 +1,5 @@
 <?php
-namespace Softbd\MenuBuilder\Facades;
+namespace Hsnbd\MenuBuilder\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Softbd\MenuBuilder\Tests;
+namespace Hsnbd\MenuBuilder\Tests;
 
-use Softbd\MenuBuilder\MenuBuilderServiceProvider;
+use Hsnbd\MenuBuilder\MenuBuilderServiceProvider;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {

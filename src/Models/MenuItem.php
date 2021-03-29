@@ -1,6 +1,6 @@
 <?php
 
-namespace Softbd\MenuBuilder\Models;
+namespace Hsnbd\MenuBuilder\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -29,13 +29,13 @@ use Illuminate\Support\Facades\Schema;
  * @property string|null $parameters
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|\Softbd\MenuBuilder\Models\MenuItem[] $children
+ * @property-read Collection|\Hsnbd\MenuBuilder\Models\MenuItem[] $children
  * @property-read int|null $children_count
- * @property-read \Softbd\MenuBuilder\Models\Menu|null $menu
- * @method static Builder|\Softbd\MenuBuilder\Models\MenuItem newModelQuery()
- * @method static Builder|\Softbd\MenuBuilder\Models\MenuItem newQuery()
- * @method static Builder|\Softbd\MenuBuilder\Models\MenuItem query()
- * @method static Builder|\Softbd\MenuBuilder\Models\MenuItem selectAllExcept($exceptColumns)
+ * @property-read \Hsnbd\MenuBuilder\Models\Menu|null $menu
+ * @method static Builder|\Hsnbd\MenuBuilder\Models\MenuItem newModelQuery()
+ * @method static Builder|\Hsnbd\MenuBuilder\Models\MenuItem newQuery()
+ * @method static Builder|\Hsnbd\MenuBuilder\Models\MenuItem query()
+ * @method static Builder|\Hsnbd\MenuBuilder\Models\MenuItem selectAllExcept($exceptColumns)
  */
 class MenuItem extends Model
 {

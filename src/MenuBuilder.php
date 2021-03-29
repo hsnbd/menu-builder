@@ -1,10 +1,10 @@
 <?php
 
-namespace Softbd\MenuBuilder;
+namespace Hsnbd\MenuBuilder;
 
 /**
  * Class MenuBuilder
- * @package Softbd\MenuBuilder
+ * @package Hsnbd\MenuBuilder
  */
 class MenuBuilder
 {

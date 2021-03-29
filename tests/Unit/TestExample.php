@@ -1,8 +1,8 @@
 <?php
 
-namespace Softbd\MenuBuilder\Tests\Unit;
+namespace Hsnbd\MenuBuilder\Tests\Unit;
 
-class TestExample extends \Softbd\MenuBuilder\Tests\TestCase
+class TestExample extends \Hsnbd\MenuBuilder\Tests\TestCase
 {
     function testOk()
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Softbd\MenuBuilder\Models;
+namespace Hsnbd\MenuBuilder\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -20,14 +20,14 @@ use Illuminate\Support\Str;
  * @property string $name
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|\Softbd\MenuBuilder\Models\MenuItem[] $items
+ * @property-read Collection|\Hsnbd\MenuBuilder\Models\MenuItem[] $items
  * @property-read int|null $items_count
- * @property-read Collection|\Softbd\MenuBuilder\Models\MenuItem[] $parent_items
+ * @property-read Collection|\Hsnbd\MenuBuilder\Models\MenuItem[] $parent_items
  * @property-read int|null $parent_items_count
- * @method static Builder|\Softbd\MenuBuilder\Models\Menu selectAllExcept($exceptColumns)
- * @method static Builder|\Softbd\MenuBuilder\Models\Menu newModelQuery()
- * @method static Builder|\Softbd\MenuBuilder\Models\Menu newQuery()
- * @method static Builder|\Softbd\MenuBuilder\Models\Menu query()
+ * @method static Builder|\Hsnbd\MenuBuilder\Models\Menu selectAllExcept($exceptColumns)
+ * @method static Builder|\Hsnbd\MenuBuilder\Models\Menu newModelQuery()
+ * @method static Builder|\Hsnbd\MenuBuilder\Models\Menu newQuery()
+ * @method static Builder|\Hsnbd\MenuBuilder\Models\Menu query()
  */
 class Menu extends Model
 {

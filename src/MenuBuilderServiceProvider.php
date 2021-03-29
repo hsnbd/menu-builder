@@ -1,6 +1,6 @@
 <?php
 
-namespace Softbd\MenuBuilder;
+namespace Hsnbd\MenuBuilder;
 
 use Illuminate\Support\ServiceProvider;
 

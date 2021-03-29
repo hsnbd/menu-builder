@@ -1,13 +1,13 @@
 <?php
 
 
-namespace Softbd\MenuBuilder\Repositories;
+namespace Hsnbd\MenuBuilder\Repositories;
 
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Arr;
-use Softbd\MenuBuilder\Models\Menu;
-use Softbd\MenuBuilder\Models\MenuItem;
+use Hsnbd\MenuBuilder\Models\Menu;
+use Hsnbd\MenuBuilder\Models\MenuItem;
 
 class MenuItemRepository
 {
@@ -16,7 +16,7 @@ class MenuItemRepository
         $data = $this->prepareParameters($data);
         unset($data['id']);
 
-        $data['order'] = (new \Softbd\MenuBuilder\Models\MenuItem)->highestOrderMenuItem();
+        $data['order'] = (new \Hsnbd\MenuBuilder\Models\MenuItem)->highestOrderMenuItem();
 
         /** @var MenuItem $menuItem */
         $menuItem = MenuItem::create($data);
